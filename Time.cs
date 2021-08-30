@@ -1,14 +1,14 @@
 namespace MoreEverything
 {
+    // TODO: Add more time periods
+    public enum TimePeriod
+    {
+        Hours,
+        Days
+    }
+    
     public class Time
     {
-        // TODO: Add more time periods
-        public enum TimePeriod
-        {
-            Hours,
-            Days
-        }
-
         private double milliseconds = 0;
 
         private double hours;

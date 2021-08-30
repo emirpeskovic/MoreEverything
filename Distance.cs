@@ -1,14 +1,15 @@
 namespace MoreEverything
 {
+
+    // For lack of a better word, DistanceIndicator
+    // TODO: Add more indicators
+    public enum DistanceIndicator
+    {
+        Kilometers
+    }
+
     public class Distance
     {
-        // For lack of a better word, DistanceIndicator
-        // TODO: Add more indicators
-        public enum DistanceIndicator
-        {
-            Kilometers
-        }
-
         private double distance = 0;
 
         private double kilometers;
