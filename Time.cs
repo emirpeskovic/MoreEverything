@@ -6,6 +6,7 @@ namespace MoreEverything
         public enum TimePeriod
         {
             Hours,
+            Days
         }
 
         private double milliseconds = 0;
@@ -16,6 +17,14 @@ namespace MoreEverything
             get => hours;
             private set => hours = value;
         }
+
+        private double days;
+        public double Days
+        {
+            get => days;
+            private set => days = value;
+        }
+        
 
         public Time(TimePeriod period, double time) => SetTime(period, time);
 
@@ -28,8 +37,22 @@ namespace MoreEverything
         public Time SetTime(TimePeriod period, double time)
         {
             // TODO: Update with more time periods
-            milliseconds = time * (3.6 * 1000000);
-            Hours = time;
+            switch (period)
+            {
+                case TimePeriod.Hours:
+                    milliseconds = time * (3.6 * 1000000);
+                    Hours = time;
+                    Days = Hours / 24;
+                    break;
+                case TimePeriod.Days:
+                    Days = time;
+                    Hours = (time / 24);
+                    milliseconds = Hours * (3.6 * 1000000);
+                    break;
+                default:
+                    break;
+
+            }
             return this;
         }
     }
