@@ -20,6 +20,8 @@ namespace MoreEverything
         }
 
         public Distance(DistanceIndicator indicator, double distance) => SetDistance(indicator, distance);
+        public static bool operator <(Distance a, Distance b) => a.distance < b.distance;
+        public static bool operator >(Distance a, Distance b) => a.distance > b.distance;
 
         /// <summary>
         /// Returns the same Distance object after setting new values to variables
