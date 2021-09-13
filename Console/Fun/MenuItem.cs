@@ -3,13 +3,11 @@ using System.Collections.Generic;
 
 namespace MoreEverything.Console.Fun
 {
-    public class MenuItem : IMenuItem
+    public class MenuItem : AbstractMenuItem
     {
-        private string FunctionName;
-        private bool Selected;
-        private bool Focused;
-        private Action Action;
-        private List<MenuItem> SubMenuItems;
+        private IMenuItem focusedMenu;
+        private int selectedIndex = 0;
+        private List<IMenuItem> SubMenuItems;
 
         public MenuItem(string functionName, Action action)
         {
@@ -18,14 +16,26 @@ namespace MoreEverything.Console.Fun
             // SubMenuItems = new List<MenuItem>(); ? Keep null ? 
         }
 
-        public MenuItem(string functionName, Action action, List<MenuItem> subMenuItems)
+        public MenuItem(string functionName, Action action, List<IMenuItem> subMenuItems)
         {
             FunctionName = functionName;
             Action = action;
             SubMenuItems = subMenuItems;
         }
 
-        public virtual void Draw(bool white)
+        public override void Update()
+        {
+            if (focusedMenu is not null)
+                if (!focusedMenu.IsSelected())
+                {
+                    focusedMenu.RemoveFocus();
+                    focusedMenu = null;
+                    selectedIndex = 0;
+                    SelectItem();
+                }
+        }
+
+        public override void Draw(bool white = false)
         {
             if (!Selected)
                 System.Console.WriteLine(FunctionName);
@@ -44,20 +54,60 @@ namespace MoreEverything.Console.Fun
                     if (SubMenuItems is null)
                         Action?.Invoke();
                     else
-                        SubMenuItems?.ForEach(s => s.Draw(false));
+                    {
+                        SubMenuItems?.ForEach(s => s.Draw(SubMenuItems.IndexOf(s) == selectedIndex));
+                    }
                 }
             }
         }
 
-        public virtual void ProcessInput(ConsoleKey key)
+        public override void ProcessInput(ConsoleKey key)
         {
-            //Action?.Invoke();
+            if (focusedMenu is null)
+            {
+                switch (key)
+                {
+                    case ConsoleKey.Escape:
+                        Deselect();
+                        RemoveFocus();
+                        break;
+                    case ConsoleKey.UpArrow:
+                        if (!(selectedIndex - 1 >= 0))
+                            break;
+                        selectedIndex--;
+                        SelectItem();
+                        break;
+                    case ConsoleKey.DownArrow:
+                        if (selectedIndex + 1 > SubMenuItems?.Count - 1)
+                            break;
+                        selectedIndex++;
+                        SelectItem();
+                        break;
+                    case ConsoleKey.Enter:
+                        SubMenuItems?[selectedIndex]?.Focus();
+                        focusedMenu = SubMenuItems?[selectedIndex] ?? null;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else
+                focusedMenu?.ProcessInput(key);
         }
 
-        public string GetName() => FunctionName;
-        public void Select() => Selected = !Selected;
-        public void Focus() => Focused = !Focused;
-
-        public bool IsSelected() => Selected;
+        public override void RemoveFocus() // wait why am I doing this again?
+        {
+            base.Focus();
+            SubMenuItems?.ForEach(s =>
+            {
+                s.Deselect();
+                s.RemoveFocus();
+            });
+        }
+        private void SelectItem()
+        {
+            SubMenuItems?.Find(m => m.IsSelected())?.Deselect();
+            SubMenuItems?[selectedIndex]?.Select();
+        }
     }
 }
