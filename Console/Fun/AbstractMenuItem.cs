@@ -11,7 +11,7 @@ namespace MoreEverything.Console.Fun
         protected bool Focused;
 
         public abstract void Update();
-        public abstract void Draw(bool white);
+        public abstract void Draw(bool white = false);
         public abstract void ProcessInput(ConsoleKey key);
         public string GetName() => FunctionName;
 
