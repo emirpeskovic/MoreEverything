@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace MoreEverything.Console.Fun
 {
+    // TODO: Remove?
     public class InteractiveMenu
     {
         public bool Exit { get; private set; }
@@ -17,17 +18,39 @@ namespace MoreEverything.Console.Fun
 
         public void AddMenu(IMenuItem menuItem) => menuItems.Add(menuItem);
 
+        public void Update()
+        {
+            if (focusedMenu is not null)
+            {
+                if (!focusedMenu.IsSelected())
+                {
+                    focusedMenu.RemoveFocus();
+                    focusedMenu = null;
+                    Reset();
+                }
+            }
+
+            focusedMenu?.Update();
+        }
+
         public void Draw()
         {
             System.Console.Clear();
-            System.Console.WriteLine(selectedIndex);
+            System.Console.BackgroundColor = ConsoleColor.Black;
+            System.Console.ForegroundColor = ConsoleColor.White;
+
+            System.Console.WriteLine("To navigate through the menu, use the arrow keys.\r\n");
+
             if (focusedMenu is null)
             {
                 menuItems.ForEach(m => m.Draw((menuItems.IndexOf(m) == selectedIndex)));
                 System.Console.WriteLine("\r\nTo exit, press escape.");
             }
             else
-                focusedMenu?.Draw(true);
+            {
+                focusedMenu.Draw(false);
+                System.Console.WriteLine("\r\nTo leave this menu, press escape.");
+            }
         }
 
         public void ProcessInput()
@@ -66,13 +89,18 @@ namespace MoreEverything.Console.Fun
 
         private void SelectItem()
         {
-            menuItems.Find(m => m.IsSelected())?.Select();
+            menuItems.Find(m => m.IsSelected())?.Deselect();
             menuItems[selectedIndex]?.Select();
+        }
+
+        private void Reset()
+        {
+            selectedIndex = 0;
+            SelectItem();
         }
 
         public void Run()
         {
-            SelectItem();
             while (!Exit)
             {
                 Draw();
