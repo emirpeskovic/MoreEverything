@@ -43,6 +43,9 @@ namespace MoreEverything.Linq
             return default(T);
         }
 
+        public static T? FindOrDefault<T>(this IEnumerable<T> collection, Predicate<T> match) => FindFirst<T>(collection, match);
+        public static T? FindOrDefault<T>(this ICollection<T> collection, Predicate<T> match) => FindFirst<T>(collection, match);
+
         public static ICollection<T> FindAllToList<T>(this ICollection<T> collection, Predicate<T> match)
         {
             ICollection<T> list = new List<T>();
