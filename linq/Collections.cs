@@ -10,5 +10,11 @@ namespace MoreEverything.Linq
             foreach (var item in list)
                 action.Invoke(item);
         }
+
+        public static void ForEach<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> collection, Action<KeyValuePair<TKey, TValue>> action)
+        {
+            foreach (var pair in collection)
+                action.Invoke(pair);
+        }
     }
 }
