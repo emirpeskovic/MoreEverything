@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace MoreEverything.Linq
 {
@@ -24,18 +25,42 @@ namespace MoreEverything.Linq
                 action.Invoke(pair);
         }
 
-        // TODO: doesn't work?
-        // * Multiple generics mess it up
-        #nullable enable
-        public static T? FindFirst<G, T>(this G collection, Predicate<T> match) where G : IEnumerable<T>, IReadOnlyCollection<T>, ICollection, IEnumerable
+#nullable enable
+        public static T? FindFirst<T>(this IEnumerable<T> enumerable, Predicate<T> match)
         {
-            foreach (var item in collection)
-            {
-                if (match.Equals(item))
+            foreach (var item in enumerable)
+                if (match(item))
                     return item;
-            }
 
             return default(T);
+        }
+
+        public static T? FindFirst<T>(this ICollection<T> collection, Predicate<T> match)
+        {
+            foreach (var item in collection)
+                if (match(item))
+                    return item;
+            return default(T);
+        }
+
+        public static ICollection<T> FindAllToList<T>(this ICollection<T> collection, Predicate<T> match)
+        {
+            ICollection<T> list = new List<T>();
+            foreach (var item in collection)
+                if (match(item))
+                    list.Add(item);
+
+            return list;
+        }
+
+        public static ICollection<T> FindAllToList<T>(this IEnumerable<T> enumerable, Predicate<T> match)
+        {
+            ICollection<T> list = new List<T>();
+            foreach (var item in enumerable)
+                if (match(item))
+                    list.Add(item);
+
+            return list;
         }
         #nullable disable
     }
