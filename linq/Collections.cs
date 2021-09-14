@@ -18,6 +18,7 @@ namespace MoreEverything.Linq
                 action.Invoke(pair);
         }
 
+        // TODO: doesn't work?
         #nullable enable
         public static T? FindFirst<G, T>(this G collection, Predicate<T> match) where G : IEnumerable<T>, IReadOnlyCollection<T>, ICollection, IEnumerable
         {
