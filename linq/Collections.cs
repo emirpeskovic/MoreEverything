@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace MoreEverything.Linq
 {
@@ -25,7 +26,42 @@ namespace MoreEverything.Linq
                 action.Invoke(pair);
         }
 
+        public static void ForEach<TKey, TValue>(this ICollection<KeyValuePair<TKey, TValue>> collection, Action<KeyValuePair<TKey, TValue>> action)
+        {
+            foreach (var pair in collection)
+                action.Invoke(pair);
+        }
+
 #nullable enable
+        public static T? Take<T>(this ICollection<T> collection, Predicate<T> match)
+        {
+            for (int i = 0; i < collection.Count; i++)
+            {
+                var element = collection.ElementAt(i);
+                if (match(element))
+                {
+                    collection.Remove(element);
+                    return element;
+                }
+            }
+
+            return default(T);
+        }
+
+        public static T[] TakeAll<T>(this ICollection<T> collection)
+        {
+            T[] array = new T[collection.Count];
+            
+            for (int i = 0; i < collection.Count; i++)
+            {
+                var element = collection.ElementAt(i);
+                collection.Remove(element);
+                array[i] = element;
+            }
+
+            return array;
+        }
+
         public static T? FindFirst<T>(this IEnumerable<T> enumerable, Predicate<T> match)
         {
             foreach (var item in enumerable)
