@@ -24,6 +24,7 @@ namespace MoreEverything.Console.Fun
             {
                 if (!focusedMenu.IsSelected())
                 {
+                    focusedMenu.Deselect();
                     focusedMenu.RemoveFocus();
                     focusedMenu = null;
                     Reset();
@@ -43,7 +44,7 @@ namespace MoreEverything.Console.Fun
 
             if (focusedMenu is null)
             {
-                menuItems.ForEach(m => m.Draw((menuItems.IndexOf(m) == selectedIndex)));
+                menuItems.ForEach(m => m.Draw((menuItems.IndexOf(m).Equals(selectedIndex))));
                 System.Console.WriteLine("\r\nTo exit, press escape.");
             }
             else
@@ -89,8 +90,8 @@ namespace MoreEverything.Console.Fun
 
         private void SelectItem()
         {
-            menuItems.Find(m => m.IsSelected())?.Deselect();
-            menuItems[selectedIndex]?.Select();
+            menuItems?.FindAll(m => m.IsSelected())?.ForEach(i => i.Deselect());
+            menuItems?[selectedIndex]?.Select();
         }
 
         private void Reset()
@@ -101,6 +102,7 @@ namespace MoreEverything.Console.Fun
 
         public void Run()
         {
+            Reset();
             while (!Exit)
             {
                 Draw();

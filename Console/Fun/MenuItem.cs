@@ -94,16 +94,7 @@ namespace MoreEverything.Console.Fun
             else
                 focusedMenu?.ProcessInput(key);
         }
-
-        public override void RemoveFocus() // wait why am I doing this again?
-        {
-            base.Focus();
-            SubMenuItems?.ForEach(s =>
-            {
-                s.Deselect();
-                s.RemoveFocus();
-            });
-        }
+        
         private void SelectItem()
         {
             SubMenuItems?.Find(m => m.IsSelected())?.Deselect();
