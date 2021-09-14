@@ -12,6 +12,18 @@ namespace MoreEverything.Linq
                 action.Invoke(item);
         }
 
+        public static void ForEach<T>(this IEnumerable<T> list, Action<T> action)
+        {
+            foreach (var item in list)
+                action.Invoke(item);
+        }
+
+        public static void ForEach<T>(this IReadOnlyCollection<T> list, Action<T> action)
+        {
+            foreach (var item in list)
+                action.Invoke(item);
+        }
+
         public static void ForEach<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> collection, Action<KeyValuePair<TKey, TValue>> action)
         {
             foreach (var pair in collection)
@@ -19,6 +31,7 @@ namespace MoreEverything.Linq
         }
 
         // TODO: doesn't work?
+        // * Multiple generics mess it up
         #nullable enable
         public static T? FindFirst<G, T>(this G collection, Predicate<T> match) where G : IEnumerable<T>, IReadOnlyCollection<T>, ICollection, IEnumerable
         {
