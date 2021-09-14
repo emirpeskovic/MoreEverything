@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace MoreEverything.Linq
@@ -16,5 +17,18 @@ namespace MoreEverything.Linq
             foreach (var pair in collection)
                 action.Invoke(pair);
         }
+
+        #nullable enable
+        public static T? FindFirst<G, T>(this G collection, Predicate<T> match) where G : IEnumerable<T>, IReadOnlyCollection<T>, ICollection, IEnumerable
+        {
+            foreach (var item in collection)
+            {
+                if (match.Equals(item))
+                    return item;
+            }
+
+            return default(T);
+        }
+        #nullable disable
     }
 }
