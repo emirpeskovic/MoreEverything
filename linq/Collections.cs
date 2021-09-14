@@ -18,12 +18,6 @@ namespace MoreEverything.Linq
                 action.Invoke(item);
         }
 
-        public static void ForEach<T>(this IReadOnlyCollection<T> list, Action<T> action)
-        {
-            foreach (var item in list)
-                action.Invoke(item);
-        }
-
         public static void ForEach<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> collection, Action<KeyValuePair<TKey, TValue>> action)
         {
             foreach (var pair in collection)
