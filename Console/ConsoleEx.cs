@@ -14,10 +14,13 @@ namespace MoreEverything.Console
                 { typeof(bool), _ => ConsoleParse.GetBool() },
             };
 
-        public static T GetInput<T>(string message = null, int length = 0)
+        public static T GetInput<T>(string message = null, bool newLine = true, int length = 0)
         {
             if (message != null)
-                System.Console.WriteLine(message);
+                if (newLine)
+                    System.Console.WriteLine(message);
+                else
+                    System.Console.Write(message);
 
             var type = typeof(T);
             if (ParseMethods.ContainsKey(type))
